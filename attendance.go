@@ -19,7 +19,7 @@ type DayAttendance []Attendance
 // Fetch Attendance for today.
 func (s *DayAttendance) Fetch(url string) (*DayAttendance, error) {
 	url = fmt.Sprintf("%v/attendance.json", url)
-	err := fetch(url, &s)
+	err := Fetch(url, &s)
 	if err != nil {
 		return nil, err
 	}

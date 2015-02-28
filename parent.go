@@ -9,7 +9,7 @@ type Parents []Parent
 
 // Fetch a list of Parents
 func (s *Parents) Fetch(url string) (*Parents, error) {
-	err := fetch(url, &s)
+	err := Fetch(url, &s)
 	if err != nil {
 		return nil, err
 	}

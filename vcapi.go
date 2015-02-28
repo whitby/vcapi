@@ -17,7 +17,7 @@ type Fetcher interface {
 }
 
 // Fetches JSON from server and Decodes into type.
-func fetch(url string, into interface{}) error {
+func Fetch(url string, into interface{}) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err

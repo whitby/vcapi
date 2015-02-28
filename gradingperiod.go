@@ -14,7 +14,7 @@ type GradingPeriods []GradingPeriod
 // Fetch Grading Periods
 func (s *GradingPeriods) Fetch(url string) (*GradingPeriods, error) {
 	url = fmt.Sprintf("%v/grading_periods.json", url)
-	err := fetch(url, &s)
+	err := Fetch(url, &s)
 	if err != nil {
 		return nil, err
 	}

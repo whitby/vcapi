@@ -14,7 +14,7 @@ func (s *Student) Fetch(url string) (*Student, error) {
 	}
 	var a aStudent
 
-	err := fetch(url, &a)
+	err := Fetch(url, &a)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +24,7 @@ func (s *Student) Fetch(url string) (*Student, error) {
 
 // Fetch A list of students
 func (s *Students) Fetch(url string) (*Students, error) {
-	err := fetch(url, &s)
+	err := Fetch(url, &s)
 	if err != nil {
 		return nil, err
 	}
