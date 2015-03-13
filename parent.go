@@ -8,10 +8,10 @@ type Parent struct {
 type Parents []Parent
 
 // Fetch a list of Parents
-func (s *Parents) Fetch(url string) (*Parents, error) {
+func (s *Parents) Fetch(url string) error {
 	err := Fetch(url, &s)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return s, nil
+	return nil
 }
