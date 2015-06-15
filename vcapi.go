@@ -10,7 +10,22 @@ const (
 	defaultBaseURL = "https://api.veracross.com/"
 	userAgent      = "vcapi/" + libraryVersion
 	mediaType      = "application/json"
+
+	headerRateLimit     = "X-RateLimit-Limit"
+	headerRateRemaining = "X-RateLimit-Remaining"
+	headerRateReset     = "X-RateLimit-Reset"
 )
+
+type Rate struct {
+	// The number of request per hour the client is currently limited to.
+	Limit int `json:"limit"`
+
+	// The number of remaining requests the client can make this hour.
+	Remaining int `json:"remaining"`
+
+	// The time at w\hic the current rate limit will reset.
+	Reset Timestamp `json:"reset"`
+}
 
 type Config struct {
 	Username   string
@@ -28,6 +43,10 @@ type Client struct {
 
 	// User agent for client
 	UserAgent string
+
+	// Rate contains the current rate limit for the client as determined by the most recent
+	// API call.
+	Rate Rate
 
 	// Username, Password and Client
 	Config *Config
