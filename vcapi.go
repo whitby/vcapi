@@ -35,16 +35,13 @@ type Client struct {
 
 func NewClient(config *Config) *Client {
 
-	if config == nil {
-		config = &Config{APIVersion: "v2"}
-	}
-
 	// Default to API Version 2
 	if config.APIVersion == "" {
 		config.APIVersion = "v2"
 	}
 
 	baseURL, _ := url.Parse(defaultBaseURL)
+	// add Version and SchoolID to URL Path
 	baseURL.Path = config.APIVersion + "/" + config.SchoolID + "/"
 
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
