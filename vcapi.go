@@ -1,33 +1,53 @@
 package vcapi
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/url"
 )
 
-// Base URL for API calls
-func (v *VeracrossSettings) BaseURL() string {
-	url := fmt.Sprintf("https://%v:%v@api.veracross.com/%v/v1", v.Username, v.Password, v.Client)
-	return url
+const (
+	libraryVersion = "0.1.0"
+	defaultBaseURL = "https://api.veracross.com/"
+	userAgent      = "vcapi/" + libraryVersion
+	mediaType      = "application/json"
+)
+
+type Config struct {
+	Username   string
+	Password   string
+	SchoolID   string
+	APIVersion string
 }
 
-type Fetcher interface {
-	Fetch()
+type Client struct {
+	// HTTP client used to communicate with the Veracross API.
+	client *http.Client
+
+	// Base URL for API requests.
+	BaseURL *url.URL
+
+	// User agent for client
+	UserAgent string
+
+	// Username, Password and Client
+	Config *Config
 }
 
-// Fetches JSON from server and Decodes into type.
-func Fetch(url string, into interface{}) error {
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
+func NewClient(config *Config) *Client {
+
+	if config == nil {
+		config = &Config{APIVersion: "v2"}
 	}
 
-	defer resp.Body.Close()
-
-	if err := json.NewDecoder(resp.Body).Decode(into); err != nil {
-		return err
+	// Default to API Version 2
+	if config.APIVersion == "" {
+		config.APIVersion = "v2"
 	}
 
-	return nil
+	baseURL, _ := url.Parse(defaultBaseURL)
+	baseURL.Path = config.APIVersion + "/" + config.SchoolID + "/"
+
+	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
+
+	return c
 }
