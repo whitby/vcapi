@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/groob/vcapi"
+	"github.com/whitby/vcapi"
 )
 
 var (
