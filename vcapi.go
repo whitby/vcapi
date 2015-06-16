@@ -3,6 +3,7 @@ package vcapi
 import (
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 const (
@@ -11,9 +12,10 @@ const (
 	userAgent      = "vcapi/" + libraryVersion
 	mediaType      = "application/json"
 
-	headerRateLimit     = "X-RateLimit-Limit"
-	headerRateRemaining = "X-RateLimit-Remaining"
-	headerRateReset     = "X-RateLimit-Reset"
+	headerRateLimit     = "X-Rate-Limit-Limit"
+	headerRateRemaining = "X-Rate-Limit-Remaining"
+	headerRateReset     = "X-Rate-Limit-Reset"
+	headerCountTotal    = "X-Total-Count"
 )
 
 type Rate struct {
@@ -24,7 +26,7 @@ type Rate struct {
 	Remaining int `json:"remaining"`
 
 	// The time at w\hic the current rate limit will reset.
-	Reset Timestamp `json:"reset"`
+	Reset int `json:"reset"`
 }
 
 type Config struct {
@@ -86,7 +88,6 @@ func (c *Client) NewRequest(urlStr string) (*http.Request, error) {
 
 	req.SetBasicAuth(c.Config.Username, c.Config.Password)
 
-	// req.Header.Add("Content-Type", mediaType)
 	req.Header.Add("Accept", mediaType)
 	req.Header.Add("User-Agent", userAgent)
 	return req, nil
@@ -97,6 +98,17 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
+	}
+
+	// Set rate limits
+	if limit := resp.Header.Get(headerRateLimit); limit != "" {
+		c.Rate.Limit, _ = strconv.Atoi(limit)
+	}
+	if remaining := resp.Header.Get(headerRateRemaining); remaining != "" {
+		c.Rate.Remaining, _ = strconv.Atoi(remaining)
+	}
+	if reset := resp.Header.Get(headerRateReset); reset != "" {
+		c.Rate.Reset, _ = strconv.Atoi(reset)
 	}
 	return resp, nil
 }

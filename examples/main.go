@@ -23,10 +23,9 @@ func init() {
 }
 
 func main() {
-	config := &vcapi.Config{Username: username, Password: password, SchoolID: "whitby", APIVersion: "v1"}
+	config := &vcapi.Config{Username: username, Password: password, SchoolID: "whitby", APIVersion: "v2"}
 	client := vcapi.NewClient(config)
 	req, err := client.NewRequest("students.json")
-	fmt.Println(req)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,4 +38,7 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(string(body))
+
+	fmt.Println(resp.Header)
+	fmt.Println(client.Rate)
 }
