@@ -23,6 +23,13 @@ type IDer interface {
 	ID(id string)
 }
 
+type Params map[string]string
+type ListOptions struct {
+	Page     int
+	NextPage int
+	Params   Params
+}
+
 type Rate struct {
 	// The number of request per hour the client is currently limited to.
 	Limit int `json:"limit"`
@@ -58,7 +65,7 @@ type Client struct {
 	// Username, Password and Client
 	Config *Config
 
-	Students Student
+	Students StudentService
 }
 
 func NewClient(config *Config) *Client {
@@ -74,7 +81,7 @@ func NewClient(config *Config) *Client {
 
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
 
-	c.Students = Student{client: c}
+	c.Students = StudentService{client: c}
 	return c
 }
 
@@ -112,9 +119,11 @@ func (c *Client) Do(req *http.Request, into interface{}) (*http.Response, error)
 	if limit := resp.Header.Get(headerRateLimit); limit != "" {
 		c.Rate.Limit, _ = strconv.Atoi(limit)
 	}
+
 	if remaining := resp.Header.Get(headerRateRemaining); remaining != "" {
 		c.Rate.Remaining, _ = strconv.Atoi(remaining)
 	}
+
 	if reset := resp.Header.Get(headerRateReset); reset != "" {
 		c.Rate.Reset, _ = strconv.Atoi(reset)
 	}

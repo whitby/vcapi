@@ -1,21 +1,23 @@
 package vcapi
 
-import "fmt"
-
-type option int
-type schoolLevel int
-type gradeLevel int
-
-const (
-	studentsBasePath        = "students"
-	recentBasePath          = "students/recent"
-	format                  = "json"
-	CurrentStudents  option = iota
-	FutureStudents
+import (
+	"fmt"
+	"math"
+	"net/url"
+	"strconv"
 )
 
+const (
+	studentsBasePath = "students"
+	format           = "json"
+)
+
+type StudentService struct {
+	client      *Client
+	RecordCount int
+}
+
 type Student struct {
-	client                    *Client
 	AdvisorFk                 int         `json:"advisor_fk"`
 	AdvisorName               string      `json:"advisor_name"`
 	BedNumber                 int         `json:"bed_number"`
@@ -67,7 +69,7 @@ type Student struct {
 }
 
 // returns an individual student record based on person id.
-func (s Student) ID(id string) (*Student, error) {
+func (s StudentService) ID(id string) (*Student, error) {
 	type aStudent struct {
 		Student `json:"student"`
 	}
@@ -87,18 +89,51 @@ func (s Student) ID(id string) (*Student, error) {
 }
 
 // Requests all students from API
-func (s Student) List() ([]Student, error) {
+func (s StudentService) List(opt *ListOptions) ([]Student, error) {
+	// Specify URL Parameters
+	params := url.Values{}
+	for k, v := range opt.Params {
+		params.Add(k, v)
+	}
+	// only set format if not already specified by options
+	if _, ok := opt.Params["format"]; !ok {
+		params.Set("format", format)
+	}
+
+	// Sets the page which should be retrieved.
+	if page := opt.Page; opt.Page != 0 {
+		params.Set("page", fmt.Sprintf("%v", page))
+	}
+
+	path := studentsBasePath + "?" + params.Encode()
 	var students = []Student{}
-	path := fmt.Sprintf("%s?format=json", studentsBasePath)
+
 	req, err := s.client.NewRequest(path)
 	if err != nil {
 		return nil, nil
 	}
 	resp, err := s.client.Do(req, &students)
+
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
+
+	if recordCount := resp.Header.Get(headerCountTotal); recordCount != "" {
+		count, _ := strconv.Atoi(recordCount)
+
+		// number of pages, rounded up
+		pages := math.Floor((float64(count) / 100.0) + .9)
+		// update NextPage number
+		if pages != 1 {
+			opt.NextPage = opt.Page + 1
+		}
+		if float64(opt.Page) >= pages {
+			opt.NextPage = 0
+		}
+
+	}
 
 	return students, nil
 }
