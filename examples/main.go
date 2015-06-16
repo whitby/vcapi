@@ -40,6 +40,7 @@ func main() {
 	}
 	//fmt.Printf("%+v", student.FirstName)
 	fmt.Println(student.FirstName + " " + student.LastName)
-	fmt.Println(student.Username)
+	fmt.Println(student.Birthday)
+	fmt.Println(student.UpdateDate)
 
 }

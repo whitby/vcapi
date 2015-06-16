@@ -19,7 +19,7 @@ type Student struct {
 	AdvisorFk                 int         `json:"advisor_fk"`
 	AdvisorName               string      `json:"advisor_name"`
 	BedNumber                 int         `json:"bed_number"`
-	Birthday                  string      `json:"birthday"`
+	Birthday                  Date        `json:"birthday"`
 	Campus                    interface{} `json:"campus"`
 	CampusApplyingFor         bool        `json:"campus_applying_for"`
 	CurrentGrade              string      `json:"current_grade"`
