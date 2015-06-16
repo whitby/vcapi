@@ -101,5 +101,4 @@ func (s Student) List() ([]Student, error) {
 	defer resp.Body.Close()
 
 	return students, nil
-
 }
