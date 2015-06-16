@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -25,20 +24,13 @@ func init() {
 func main() {
 	config := &vcapi.Config{Username: username, Password: password, SchoolID: "whitby", APIVersion: "v2"}
 	client := vcapi.NewClient(config)
-	req, err := client.NewRequest("students.json")
+	students, err := client.Students.List()
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(body))
 
-	fmt.Println(resp.Header)
-	fmt.Println(client.Rate)
+	for _, student := range students {
+		fmt.Println(student.Username)
+	}
+
 }

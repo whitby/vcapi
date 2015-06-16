@@ -1,6 +1,7 @@
 package vcapi
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -17,6 +18,10 @@ const (
 	headerRateReset     = "X-Rate-Limit-Reset"
 	headerCountTotal    = "X-Total-Count"
 )
+
+type IDer interface {
+	ID(id string)
+}
 
 type Rate struct {
 	// The number of request per hour the client is currently limited to.
@@ -52,6 +57,8 @@ type Client struct {
 
 	// Username, Password and Client
 	Config *Config
+
+	Students Student
 }
 
 func NewClient(config *Config) *Client {
@@ -67,6 +74,7 @@ func NewClient(config *Config) *Client {
 
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
 
+	c.Students = Student{client: c}
 	return c
 }
 
@@ -94,7 +102,7 @@ func (c *Client) NewRequest(urlStr string) (*http.Request, error) {
 }
 
 // Do sends an API request and returns the API response.
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
+func (c *Client) Do(req *http.Request, into interface{}) (*http.Response, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -110,5 +118,10 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if reset := resp.Header.Get(headerRateReset); reset != "" {
 		c.Rate.Reset, _ = strconv.Atoi(reset)
 	}
+
+	if err := json.NewDecoder(resp.Body).Decode(into); err != nil {
+		return nil, err
+	}
+
 	return resp, nil
 }
