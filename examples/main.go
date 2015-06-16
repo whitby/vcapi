@@ -24,13 +24,22 @@ func init() {
 func main() {
 	config := &vcapi.Config{Username: username, Password: password, SchoolID: "whitby", APIVersion: "v2"}
 	client := vcapi.NewClient(config)
-	students, err := client.Students.List()
+	/*
+		students, err := client.Students.List()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, student := range students {
+			fmt.Println(student.FirstName + " " + student.LastName)
+		}
+	*/
+	student, err := client.Students.ID("288")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	for _, student := range students {
-		fmt.Println(student.FirstName + " " + student.LastName)
-	}
+	//fmt.Printf("%+v", student.FirstName)
+	fmt.Println(student.FirstName + " " + student.LastName)
+	fmt.Println(student.Username)
 
 }

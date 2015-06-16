@@ -68,18 +68,22 @@ type Student struct {
 
 // returns an individual student record based on person id.
 func (s Student) ID(id string) (*Student, error) {
+	type aStudent struct {
+		Student `json:"student"`
+	}
+	var a aStudent
 	path := fmt.Sprintf("%s/%s.json", studentsBasePath, id)
 	req, err := s.client.NewRequest(path)
 	if err != nil {
 		return nil, nil
 	}
-	resp, err := s.client.Do(req, &s)
+	resp, err := s.client.Do(req, &a)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	return &s, nil
+	return &a.Student, nil
 }
 
 // Requests all students from API
