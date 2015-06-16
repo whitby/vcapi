@@ -8,7 +8,8 @@ type gradeLevel int
 
 const (
 	studentsBasePath        = "students"
-	recentBasePath          = "students/recent.json"
+	recentBasePath          = "students/recent"
+	format                  = "json"
 	CurrentStudents  option = iota
 	FutureStudents
 )
@@ -84,7 +85,7 @@ func (s Student) ID(id string) (*Student, error) {
 // Requests all students from API
 func (s Student) List() ([]Student, error) {
 	var students = []Student{}
-	path := fmt.Sprintf("%s.json", studentsBasePath)
+	path := fmt.Sprintf("%s?format=json", studentsBasePath)
 	req, err := s.client.NewRequest(path)
 	if err != nil {
 		return nil, nil

@@ -30,7 +30,7 @@ func main() {
 	}
 
 	for _, student := range students {
-		fmt.Println(student.Username)
+		fmt.Println(student.FirstName + " " + student.LastName)
 	}
 
 }
