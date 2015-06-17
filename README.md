@@ -18,7 +18,7 @@ func main() {
 	config := &vcapi.Config{
 		Username:   "api.username",  // API Username
 		Password:   "myAPIPassword", // API Password
-		SchoolID:   "whitby",        //client, school name
+		SchoolID:   "whitby",        // Client, school name
 		APIVersion: "v2",            // Not a necessary field, API Version defaults to v2
 	}
 
