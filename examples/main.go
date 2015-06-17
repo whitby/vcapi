@@ -32,14 +32,14 @@ func main() {
 	opt := &vcapi.ListOptions{Params: vcapi.Params{}}
 
 	for {
-		students, err := client.Students.List(opt)
+		parents, err := client.Parents.List(opt)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		for _, student := range students {
-			fmt.Println(student.FirstName + " " + student.LastName)
-			fmt.Println(client.Students.Relationships(student))
+		for _, parent := range parents {
+			fmt.Println(parent.FirstName + " " + parent.LastName)
+			fmt.Println(client.Parents.Relationships(parent))
 		}
 		opt.Page++
 

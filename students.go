@@ -4,7 +4,6 @@ import "fmt"
 
 const (
 	studentsBasePath = "students"
-	format           = "json"
 )
 
 type studentService struct {
@@ -64,8 +63,8 @@ type Student struct {
 }
 
 // Relationships returns related persons
-func (s studentService) Relationships(student *Student) (*[]Relationship, error) {
-	path := fmt.Sprintf("%s/%v/relationships?format=%v", studentsBasePath, student.PersonPk, format)
+func (s studentService) Relationships(st Student) (*[]Relationship, error) {
+	path := fmt.Sprintf("%s/%v/relationships?format=%v", studentsBasePath, st.PersonPk, format)
 	var relationships []Relationship
 	req, err := s.client.NewRequest(path)
 	if err != nil {

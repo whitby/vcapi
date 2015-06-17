@@ -14,6 +14,7 @@ const (
 	defaultBaseURL = "https://api.veracross.com/"
 	userAgent      = "vcapi/" + libraryVersion
 	mediaType      = "application/json"
+	format         = "json"
 
 	headerRateLimit     = "X-Rate-Limit-Limit"
 	headerRateRemaining = "X-Rate-Limit-Remaining"
@@ -64,6 +65,7 @@ type Client struct {
 	Config *Config
 
 	Students studentService
+	Parents  parentService
 }
 
 func NewClient(config *Config) *Client {
@@ -80,6 +82,7 @@ func NewClient(config *Config) *Client {
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
 
 	c.Students = studentService{client: c}
+	c.Parents = parentService{client: c}
 	return c
 }
 
