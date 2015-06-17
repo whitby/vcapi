@@ -22,9 +22,13 @@ func init() {
 }
 
 func main() {
-	config := &vcapi.Config{Username: username, Password: password, SchoolID: "whitby", APIVersion: "v2"}
+	config := &vcapi.Config{
+		Username:   username,
+		Password:   password,
+		SchoolID:   "whitby",
+		APIVersion: "v2",
+	}
 	client := vcapi.NewClient(config)
-
 	opt := &vcapi.ListOptions{Params: vcapi.Params{}}
 
 	for {
@@ -35,6 +39,7 @@ func main() {
 
 		for _, student := range students {
 			fmt.Println(student.FirstName + " " + student.LastName)
+			fmt.Println(client.Students.Relationships(student))
 		}
 		opt.Page++
 

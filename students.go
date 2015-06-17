@@ -63,6 +63,22 @@ type Student struct {
 	YearApplyingFor           int         `json:"year_applying_for"`
 }
 
+// Relationships returns related persons
+func (s studentService) Relationships(student *Student) (*[]Relationship, error) {
+	path := fmt.Sprintf("%s/%v/relationships?format=%v", studentsBasePath, student.PersonPk, format)
+	var relationships []Relationship
+	req, err := s.client.NewRequest(path)
+	if err != nil {
+		return nil, nil
+	}
+	resp, err := s.client.Do(req, &relationships)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	return &relationships, nil
+}
+
 // ID returns an individual student record based on person id.
 func (s studentService) ID(id string) (*Student, error) {
 	type aStudent struct {
