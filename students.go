@@ -6,7 +6,7 @@ const (
 	studentsBasePath = "students"
 )
 
-type studentService struct {
+type StudentService struct {
 	client *Client
 }
 
@@ -63,7 +63,7 @@ type Student struct {
 }
 
 // Relationships returns related persons
-func (s studentService) Relationships(st Student) (*[]Relationship, error) {
+func (s StudentService) Relationships(st Student) (*[]Relationship, error) {
 	path := fmt.Sprintf("%s/%v/relationships?format=%v", studentsBasePath, st.PersonPk, format)
 	var relationships []Relationship
 	req, err := s.client.NewRequest(path)
@@ -79,7 +79,7 @@ func (s studentService) Relationships(st Student) (*[]Relationship, error) {
 }
 
 // ID returns an individual student record based on person id.
-func (s studentService) ID(id string) (*Student, error) {
+func (s StudentService) ID(id string) (*Student, error) {
 	type aStudent struct {
 		Student `json:"student"`
 	}
@@ -98,7 +98,7 @@ func (s studentService) ID(id string) (*Student, error) {
 	return &a.Student, nil
 }
 
-func (s studentService) list(opt *ListOptions, basePath string) ([]Student, error) {
+func (s StudentService) list(opt *ListOptions, basePath string) ([]Student, error) {
 	// build url
 	path := addOptions(basePath, format, opt)
 
@@ -123,7 +123,7 @@ func (s studentService) list(opt *ListOptions, basePath string) ([]Student, erro
 }
 
 // List requests all students from API
-func (s studentService) List(opt *ListOptions) ([]Student, error) {
+func (s StudentService) List(opt *ListOptions) ([]Student, error) {
 	students, err := s.list(opt, studentsBasePath)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func (s studentService) List(opt *ListOptions) ([]Student, error) {
 }
 
 // Recent requests recently updated students from API
-func (s studentService) Recent(opt *ListOptions) ([]Student, error) {
+func (s StudentService) Recent(opt *ListOptions) ([]Student, error) {
 	students, err := s.list(opt, studentsBasePath+"/recent")
 	if err != nil {
 		return nil, err

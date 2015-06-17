@@ -6,7 +6,7 @@ const (
 	parentsBasePath = "parents"
 )
 
-type parentService struct {
+type ParentService struct {
 	client *Client
 }
 
@@ -58,7 +58,7 @@ type Parent struct {
 }
 
 // Relationships returns related persons
-func (s parentService) Relationships(p Parent) (*[]Relationship, error) {
+func (s ParentService) Relationships(p Parent) (*[]Relationship, error) {
 	path := fmt.Sprintf("%s/%v/relationships?format=%v", parentsBasePath, p.PersonPk, format)
 	var relationships []Relationship
 	req, err := s.client.NewRequest(path)
@@ -74,7 +74,7 @@ func (s parentService) Relationships(p Parent) (*[]Relationship, error) {
 }
 
 // ID returns an individual parent record based on person id.
-func (s parentService) ID(id string) (*Parent, error) {
+func (s ParentService) ID(id string) (*Parent, error) {
 	type aParent struct {
 		Parent `json:"parent"`
 	}
@@ -93,7 +93,7 @@ func (s parentService) ID(id string) (*Parent, error) {
 	return &a.Parent, nil
 }
 
-func (s parentService) list(opt *ListOptions, basePath string) ([]Parent, error) {
+func (s ParentService) list(opt *ListOptions, basePath string) ([]Parent, error) {
 	// build url
 	path := addOptions(basePath, format, opt)
 
@@ -118,7 +118,7 @@ func (s parentService) list(opt *ListOptions, basePath string) ([]Parent, error)
 }
 
 // List requests all parents from API
-func (s parentService) List(opt *ListOptions) ([]Parent, error) {
+func (s ParentService) List(opt *ListOptions) ([]Parent, error) {
 	parents, err := s.list(opt, parentsBasePath)
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (s parentService) List(opt *ListOptions) ([]Parent, error) {
 }
 
 // Recent requests recently updated parents from API
-func (s parentService) Recent(opt *ListOptions) ([]Parent, error) {
+func (s ParentService) Recent(opt *ListOptions) ([]Parent, error) {
 	parents, err := s.list(opt, parentsBasePath+"/recent")
 	if err != nil {
 		return nil, err
