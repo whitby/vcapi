@@ -21,10 +21,6 @@ const (
 	headerCountTotal    = "X-Total-Count"
 )
 
-type IDer interface {
-	ID(id string)
-}
-
 type Params map[string]string
 type ListOptions struct {
 	Page     int
@@ -67,7 +63,7 @@ type Client struct {
 	// Username, Password and Client
 	Config *Config
 
-	Students StudentService
+	Students studentService
 }
 
 func NewClient(config *Config) *Client {
@@ -83,7 +79,7 @@ func NewClient(config *Config) *Client {
 
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
 
-	c.Students = StudentService{client: c}
+	c.Students = studentService{client: c}
 	return c
 }
 

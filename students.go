@@ -7,10 +7,11 @@ const (
 	format           = "json"
 )
 
-type StudentService struct {
+type studentService struct {
 	client *Client
 }
 
+// Student represents a Veracross API student
 type Student struct {
 	AdvisorFk                 int         `json:"advisor_fk"`
 	AdvisorName               string      `json:"advisor_name"`
@@ -62,13 +63,13 @@ type Student struct {
 	YearApplyingFor           int         `json:"year_applying_for"`
 }
 
-// returns an individual student record based on person id.
-func (s StudentService) ID(id string) (*Student, error) {
+// ID returns an individual student record based on person id.
+func (s studentService) ID(id string) (*Student, error) {
 	type aStudent struct {
 		Student `json:"student"`
 	}
 	var a aStudent
-	path := fmt.Sprintf("%s/%s.json", studentsBasePath, id)
+	path := fmt.Sprintf("%s/%s?format=%v", studentsBasePath, id, format)
 	req, err := s.client.NewRequest(path)
 	if err != nil {
 		return nil, nil
@@ -82,13 +83,13 @@ func (s StudentService) ID(id string) (*Student, error) {
 	return &a.Student, nil
 }
 
-// Requests all students from API
-func (s StudentService) List(opt *ListOptions) ([]Student, error) {
+func (s studentService) list(opt *ListOptions, basePath string) ([]Student, error) {
 	// build url
-	path := addOptions(studentsBasePath, format, opt)
+	path := addOptions(basePath, format, opt)
 
 	var students = []Student{}
 	req, err := s.client.NewRequest(path)
+	fmt.Println(req)
 	if err != nil {
 		return nil, nil
 	}
@@ -102,6 +103,26 @@ func (s StudentService) List(opt *ListOptions) ([]Student, error) {
 
 	// handle pagination
 	paginate(resp, opt)
+
+	return students, nil
+}
+
+// List requests all students from API
+func (s studentService) List(opt *ListOptions) ([]Student, error) {
+	students, err := s.list(opt, studentsBasePath)
+	if err != nil {
+		return nil, err
+	}
+
+	return students, nil
+}
+
+// Recent requests recently updated students from API
+func (s studentService) Recent(opt *ListOptions) ([]Student, error) {
+	students, err := s.list(opt, studentsBasePath+"/recent")
+	if err != nil {
+		return nil, err
+	}
 
 	return students, nil
 }
