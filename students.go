@@ -1,11 +1,6 @@
 package vcapi
 
-import (
-	"fmt"
-	"math"
-	"net/url"
-	"strconv"
-)
+import "fmt"
 
 const (
 	studentsBasePath = "students"
@@ -13,8 +8,7 @@ const (
 )
 
 type StudentService struct {
-	client      *Client
-	RecordCount int
+	client *Client
 }
 
 type Student struct {
@@ -90,24 +84,10 @@ func (s StudentService) ID(id string) (*Student, error) {
 
 // Requests all students from API
 func (s StudentService) List(opt *ListOptions) ([]Student, error) {
-	// Specify URL Parameters
-	params := url.Values{}
-	for k, v := range opt.Params {
-		params.Add(k, v)
-	}
-	// only set format if not already specified by options
-	if _, ok := opt.Params["format"]; !ok {
-		params.Set("format", format)
-	}
+	// build url
+	path := addOptions(studentsBasePath, format, opt)
 
-	// Sets the page which should be retrieved.
-	if page := opt.Page; opt.Page != 0 {
-		params.Set("page", fmt.Sprintf("%v", page))
-	}
-
-	path := studentsBasePath + "?" + params.Encode()
 	var students = []Student{}
-
 	req, err := s.client.NewRequest(path)
 	if err != nil {
 		return nil, nil
@@ -120,20 +100,8 @@ func (s StudentService) List(opt *ListOptions) ([]Student, error) {
 
 	defer resp.Body.Close()
 
-	if recordCount := resp.Header.Get(headerCountTotal); recordCount != "" {
-		count, _ := strconv.Atoi(recordCount)
-
-		// number of pages, rounded up
-		pages := math.Floor((float64(count) / 100.0) + .9)
-		// update NextPage number
-		if pages != 1 {
-			opt.NextPage = opt.Page + 1
-		}
-		if float64(opt.Page) >= pages {
-			opt.NextPage = 0
-		}
-
-	}
+	// handle pagination
+	paginate(resp, opt)
 
 	return students, nil
 }

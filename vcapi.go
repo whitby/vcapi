@@ -2,6 +2,8 @@ package vcapi
 
 import (
 	"encoding/json"
+	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -133,4 +135,41 @@ func (c *Client) Do(req *http.Request, into interface{}) (*http.Response, error)
 	}
 
 	return resp, nil
+}
+
+func addOptions(basePath, format string, opt *ListOptions) string {
+	// Specify URL Parameters
+	params := url.Values{}
+	for k, v := range opt.Params {
+		params.Add(k, v)
+	}
+	// only set format if not already specified by options
+	if _, ok := opt.Params["format"]; !ok {
+		params.Set("format", format)
+	}
+
+	// Sets the page which should be retrieved.
+	if page := opt.Page; opt.Page != 0 {
+		params.Set("page", fmt.Sprintf("%v", page))
+	}
+
+	path := basePath + "?" + params.Encode()
+	return path
+}
+
+func paginate(resp *http.Response, opt *ListOptions) {
+	if recordCount := resp.Header.Get(headerCountTotal); recordCount != "" {
+		count, _ := strconv.Atoi(recordCount)
+
+		// number of pages, rounded up
+		pages := math.Floor((float64(count) / 100.0) + .9)
+		// update NextPage number
+		if pages != 1 {
+			opt.NextPage = opt.Page + 1
+		}
+		if float64(opt.Page) >= pages {
+			opt.NextPage = 0
+		}
+
+	}
 }
