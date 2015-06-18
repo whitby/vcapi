@@ -99,7 +99,6 @@ func (s ParentService) list(opt *ListOptions, basePath string) ([]Parent, error)
 
 	var parents = []Parent{}
 	req, err := s.client.NewRequest(path)
-	fmt.Println(req)
 	if err != nil {
 		return nil, nil
 	}

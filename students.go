@@ -104,7 +104,6 @@ func (s StudentService) list(opt *ListOptions, basePath string) ([]Student, erro
 
 	var students = []Student{}
 	req, err := s.client.NewRequest(path)
-	fmt.Println(req)
 	if err != nil {
 		return nil, nil
 	}

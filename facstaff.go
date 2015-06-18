@@ -74,7 +74,6 @@ func (s FacStaffService) list(opt *ListOptions, basePath string) ([]FacStaff, er
 
 	var facstaffs = []FacStaff{}
 	req, err := s.client.NewRequest(path)
-	fmt.Println(req)
 	if err != nil {
 		return nil, nil
 	}
