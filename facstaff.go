@@ -12,6 +12,40 @@ type FacStaffService struct {
 
 // FacStaff represents a Veracross API facstaff
 type FacStaff struct {
+	Biography            interface{} `json:"biography"`
+	Birthday             string      `json:"birthday"`
+	BusinessPhone        string      `json:"business_phone"`
+	Campus               interface{} `json:"campus"`
+	DateHired            string      `json:"date_hired"`
+	Department           string      `json:"department"`
+	DisplayBusinessPhone bool        `json:"display_business_phone"`
+	DisplayEmail1        bool        `json:"display_email_1"`
+	DisplayFacultyType   bool        `json:"display_faculty_type"`
+	DisplayHomePhone     bool        `json:"display_home_phone"`
+	DisplayJobTitle      bool        `json:"display_job_title"`
+	DisplayMobilePhone   bool        `json:"display_mobile_phone"`
+	Email1               string      `json:"email_1"`
+	FacultyType          string      `json:"faculty_type"`
+	FirstName            string      `json:"first_name"`
+	Gender               string      `json:"gender"`
+	HomePhone            string      `json:"home_phone"`
+	HouseholdFk          int         `json:"household_fk"`
+	JobTitle             string      `json:"job_title"`
+	LastName             string      `json:"last_name"`
+	MiddleName           interface{} `json:"middle_name"`
+	MobilePhone          string      `json:"mobile_phone"`
+	NamePrefix           string      `json:"name_prefix"`
+	NameSuffix           interface{} `json:"name_suffix"`
+	NickFirstName        string      `json:"nick_first_name"`
+	NickName             interface{} `json:"nick_name"`
+	PersonPk             int         `json:"person_pk"`
+	Role                 string      `json:"role"`
+	Roles                string      `json:"roles"`
+	SchoolLevel          string      `json:"school_level"`
+	SecurityHash         string      `json:"security_hash"`
+	SecurityRoles        string      `json:"security_roles"`
+	UpdateDate           string      `json:"update_date"`
+	Username             string      `json:"username"`
 }
 
 // ID returns an individual facstaff record based on person id.
