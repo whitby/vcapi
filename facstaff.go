@@ -16,7 +16,7 @@ type FacStaff struct {
 	Birthday             string      `json:"birthday"`
 	BusinessPhone        string      `json:"business_phone"`
 	Campus               interface{} `json:"campus"`
-	DateHired            string      `json:"date_hired"`
+	DateHired            Date        `json:"date_hired"`
 	Department           string      `json:"department"`
 	DisplayBusinessPhone bool        `json:"display_business_phone"`
 	DisplayEmail1        bool        `json:"display_email_1"`

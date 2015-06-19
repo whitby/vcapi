@@ -1,6 +1,9 @@
 package vcapi
 
-import "time"
+import (
+	"database/sql/driver"
+	"time"
+)
 
 // Veracross Time Format
 const VCTimeFormat = "2006-01-02"
@@ -16,4 +19,8 @@ func (d *Date) UnmarshalJSON(data []byte) (err error) {
 	}
 	d.Time, err = time.Parse(`"`+VCTimeFormat+`"`, string(data))
 	return
+}
+
+func (d Date) Value() (driver.Value, error) {
+	return d.Time, nil
 }
