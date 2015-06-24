@@ -65,6 +65,7 @@ type Client struct {
 	Config *Config
 
 	Students   StudentService
+	Alumni     AlumniService
 	Parents    ParentService
 	FacStaff   FacStaffService
 	Households HouseholdService
@@ -84,6 +85,7 @@ func NewClient(config *Config) *Client {
 	c := &Client{client: http.DefaultClient, BaseURL: baseURL, UserAgent: userAgent, Config: config}
 
 	c.Students = StudentService{client: c}
+	c.Alumni = AlumniService{client: c}
 	c.Parents = ParentService{client: c}
 	c.FacStaff = FacStaffService{client: c}
 	c.Households = HouseholdService{client: c}
