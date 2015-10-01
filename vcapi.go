@@ -64,11 +64,12 @@ type Client struct {
 	// Username, Password and Client
 	Config *Config
 
-	Students   StudentService
-	Alumni     AlumniService
-	Parents    ParentService
-	FacStaff   FacStaffService
-	Households HouseholdService
+	Students     StudentService
+	Alumni       AlumniService
+	Parents      ParentService
+	FacStaff     FacStaffService
+	Households   HouseholdService
+	RotationDays RotationDayService
 }
 
 func NewClient(config *Config) *Client {
@@ -89,6 +90,7 @@ func NewClient(config *Config) *Client {
 	c.Parents = ParentService{client: c}
 	c.FacStaff = FacStaffService{client: c}
 	c.Households = HouseholdService{client: c}
+	c.RotationDays = RotationDayService{client: c}
 	return c
 }
 
